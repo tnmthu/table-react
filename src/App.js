@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import TableTemplate from './mutual/TableTemplate';
+import TableTemplate from './components/Table';
 import ActionForm from './components/ActionForm';
 import { Button } from 'antd';
 

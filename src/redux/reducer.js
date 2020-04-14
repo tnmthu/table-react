@@ -1,4 +1,12 @@
-const initialState = {};
+const initialState = {
+  emps: [], 
+  currentEmp: {
+    id: "",
+    employee_name: "",
+    employee_age: "",
+    employee_salary: ""
+  }
+};
 
 function reducer(state = initialState, action) {
 
@@ -12,9 +20,34 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         emps: action.json
-      }
+      };
+
     case 'ADD_EMP':
       return ;
+
+    case 'SELECT_EMP':
+      return {
+        ...state,
+        currentEmp: action.payload
+      };
+
+    case 'UPDATE_CURRENT_EMP':
+      return {
+        ...state,
+        currentEmp: action.payload
+      };
+
+    case 'UNSELECT_EMP':
+      return {
+        ...state,
+        currentEmp: {
+          id: "",
+          employee_name: "",
+          employee_age: "",
+          employee_salary: ""
+        }
+      };
+
     default:
       return state;
   }
