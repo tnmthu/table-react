@@ -1,11 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import TableTemplate from './mutual/TableTemplate';
+import ActionForm from './components/ActionForm';
+import { Button } from 'antd';
 
 function App() {
   return (
-    <div className="App">
-      
+    <div className="container">
+      <TableTemplate />
+      <div className="right">
+        <div className="buttons">
+          <Button className="btn btn__add">Add</Button>
+          <Button className="btn btn__delete">Delete</Button>
+          <Button className="btn btn__save">Save</Button>
+        </div>
+        <ActionForm />
+      </div>
     </div>
   );
 }

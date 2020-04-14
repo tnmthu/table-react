@@ -1,0 +1,36 @@
+@import '~antd/dist/antd.css';
+@import '~antd/dist/antd.css';
+
+.container {
+  width: 90%;
+  margin: 80px auto 0;
+  display: flex;
+  justify-content: space-between;
+}
+.right {
+  width: 35vw;
+
+  button {
+    width: 30%;
+    height: 40px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+}
+.btn {
+  color: #fff;
+
+  &__add {
+    background-color: #4f6bed;
+  }
+  &__delete {
+    background-color: #D42A32;
+  }
+  &__save {
+    background-color: #3EA206;
+  }
+}
