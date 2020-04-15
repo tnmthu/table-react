@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, InputNumber } from 'antd';
 import { connect } from 'react-redux';
-import { updateCurrentEmp } from '../../redux/actions';
+import { addEmp, clickAddBtn, updateCurrentEmp } from '../../redux/actions';
+import { isName, isAge, isMoney } from '../../services/validate';
 import './style.css';
 
 const ActionForm = (props) => {
-  const [form] = Form.useForm();
+  const form = props.form;
+
   const initialValues = {
     id: '',
     employee_name: '',
@@ -17,83 +19,78 @@ const ActionForm = (props) => {
     form.setFieldsValue(props.currentEmp);
   });
 
-  // DUMAAAAAAAAAAAAAAAA
-  console.log("current", props.currentEmp)
-
-  const isAge = (rule, n) => {
-    console.log("age", n, typeof n)
-    return n > 20 && n < 65 ? Promise.resolve() : Promise.reject('Age must be an integer, > 20, < 65.');
-  }
-  const isMoney = (rule, n) => {
-    let regex = /^[0-9]{1,3}([0-9]{3})*$/;
-    return regex.test(n) ? Promise.resolve() : Promise.reject('Salary must be in money type. Eg. 1000000');
-  }
-  const removeAscent = (str) => {
-    if (str === null || str === undefined) return str;
-    str = str.toLowerCase();
-    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
-    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
-    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
-    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
-    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
-    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
-    str = str.replace(/đ/g, "d");
-    return str;
-  }
-  const isName = (rule, s) => {
-    let regex = /^[a-zA-Z ]+$/;
-    return regex.test(removeAscent(s)) ? Promise.resolve() : Promise.reject("Wrong name format.")
+  // const onInputChange = (event, col) => {
+  //   // CAN PHAI VALIDATE TRC KHI UPDATE HAY ADD
+  // }
+  const onFinish = (value) => {
+    if (value.id === "") {
+      props.clickAddBtn(value);
+    } else {
+      console.log("du di me")
+    }
   }
 
-  const onInputChange = (event, col) => {
-    // DUDIME bug khi input sai
-    let newInput = event.target.value;
-    // eslint-disable-next-line default-case
-    switch (col) {
-      case 'employee_name':
-        if (isName(null, newInput)) {
-          props.updateCurrentEmp({
-            ...props.currentEmp,
-            employee_name: newInput
-          });
-        } else {
-          // DUMAAAAA
-        }
+  const onValuesChange = (value) => {
+    let validateType = null;
+    console.log(value, Object.keys(value)[0], Object.values(value))
+    switch (Object.keys(value)[0]) {
+      case "employee_name":
+        validateType = isName;
         break;
-      
-      case 'employee_age':
-        if (isAge(null, newInput)) {
-          props.updateCurrentEmp({
-            ...props.currentEmp,
-            employee_age: newInput
-          });
-        }
+      case "employee_age":
+        validateType = isAge;
         break;
-      
-      case 'employee_salary':
-        if (isMoney(null, newInput)) {
-          props.updateCurrentEmp({
-            ...props.currentEmp,
-            employee_salary: newInput
-          });
-        }
+      case "employee_salary":
+        validateType = isMoney;
         break;
+      default:
+        break;
+    }
+    if (validateType) {
+      validateType(null, Object.values(value)[0])
+        .then(function() {
+          switch (Object.keys(value)[0]) {
+            case "employee_name":
+              props.updateCurrentEmp({
+                ...props.currentEmp,
+                employee_name: Object.values(value)[0]
+              });
+              break;
+            case "employee_age":
+              props.updateCurrentEmp({
+                ...props.currentEmp,
+                employee_age: Object.values(value)[0]
+              });
+              break;
+            case "employee_salary":
+              props.updateCurrentEmp({
+                ...props.currentEmp,
+                employee_salary: Object.values(value)[0]
+              });
+              break;
+            default:
+              break;
+          }
+        })
+        .catch(function() {
+          return;
+        });
     }
   }
 
   return (
-    <Form className="form" form={form} name="form" initialValues={initialValues}>
+    <Form className="form" onFinish={(value) => {onFinish(value)}} onValuesChange={(value) => {onValuesChange(value)}} form={form} name="form" initialValues={initialValues}>
       <Form.Item label="Id:" name="id">
         <Input disabled></Input>
       </Form.Item>
       <Form.Item label="Name:" name="employee_name" rules={[{required: true,}, {validator: isName}]}>
-        <Input onChange={(event) => onInputChange(event, 'employee_name')}></Input>
+        <Input></Input>
       </Form.Item>
       <Form.Item label="Age:" name="employee_age" rules={[{required: true}, {validator: isAge}]}>
-        <InputNumber onChange={(event) => onInputChange(event, 'employee_age')}></InputNumber>
+        <InputNumber></InputNumber>
       </Form.Item>
       <Form.Item label="Salary:" name="employee_salary" rules={[{required: true,}, {validator: isMoney}]}>
-        <InputNumber onChange={(event) => onInputChange(event, 'employee_salary')}></InputNumber>
+        <InputNumber></InputNumber>
       </Form.Item>
     </Form>
   );
@@ -101,13 +98,15 @@ const ActionForm = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    currentEmp: state.currentEmp
+    currentEmp: state.currentEmp,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateCurrentEmp: (payload) => dispatch(updateCurrentEmp(payload))
+    addEmp: (payload) => dispatch(addEmp(payload)),
+    clickAddBtn: (payload) => dispatch(clickAddBtn({type: 'ADD_EMP', newEmp: payload})),
+    updateCurrentEmp: (payload) => dispatch(updateCurrentEmp({type: 'EDIT_EMP', edited: payload}))
   }
 }
 

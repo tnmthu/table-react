@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
 import { getEmps, selectEmp, unselectEmp } from '../../redux/actions';

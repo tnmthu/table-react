@@ -29,7 +29,17 @@
   &__delete {
     background-color: #D42A32;
   }
+  &__delete:hover {
+    color: #D42A32;
+    border-color: #D42A32;
+    background-color: #fff;
+  }
   &__save {
     background-color: #3EA206;
+  }
+  &__save:hover {
+    color: #3EA206;
+    border-color: #3EA206;
+    background-color: #fff;
   }
 }

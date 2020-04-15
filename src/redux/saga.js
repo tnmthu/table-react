@@ -12,7 +12,7 @@ function* fetchEmps() {
 
 function* createNewEmp(payload) {
   try {
-    yield call(create(payload));
+    yield call(create, payload);
     // yield call(fetchEmps);
   } catch(err) {
     console.log(err);
@@ -21,7 +21,7 @@ function* createNewEmp(payload) {
 
 function* updateEmp(payload) {
   try {
-    yield call(update(payload));
+    yield call(update, payload);
   } catch(err) {
     console.log(err);
   }
@@ -29,18 +29,22 @@ function* updateEmp(payload) {
 
 function* deleteEmp(payload) {
   try {
-    yield call(del(payload));
+    yield call(del, payload);
   } catch(err) {
     console.log(err);
   }
 }
 
-function* actionWatcher() {
-  yield takeLatest('GET_EMPS', fetchEmps);
-}
+// function* actionWatcher() {
+//   yield takeLatest('GET_EMPS', fetchEmps);
+// }
 
 export default function* saga() {
   yield all([
-    actionWatcher(),
+    // actionWatcher(),
+    yield takeLatest('ADD_EMP', createNewEmp),
+    yield takeLatest('GET_EMPS', fetchEmps),
+    yield takeLatest('EDIT_EMP', updateEmp),
+    yield takeLatest('DELETE_EMP', deleteEmp),
   ]);
 }

@@ -14,12 +14,18 @@ export async function retrieve() {
   return json;
 }
 
-export async function update(emp) {
-  const res = await fetch(URL + `/${emp.id}`, {
+export async function update(action) {
+  console.log("api update id", action, URL + `/${action.payload.id}`);
+  const res = await fetch(URL + `/${action.payload.id}`, {
     method: 'PUT',
-    body: JSON.stringify(emp)
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'same-origin',
+    body: JSON.stringify(action.payload),
   });
-  return res.json();
+  const json = await res.json();
+  return json;
 }
 
 export async function del(id) {
@@ -27,4 +33,4 @@ export async function del(id) {
     method: 'DELETE'
   });
   return res.json();
-} 
+}

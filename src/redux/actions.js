@@ -11,9 +11,9 @@ export function addEmp(payload) {
   };
 }
 
-export function editEmp(payload) {
+export function clickAddBtn(payload) {
   return {
-    type: 'EDIT_EMP',
+    type: 'CLICK_ADD_BTN',
     payload
   };
 }
@@ -32,15 +32,15 @@ export function selectEmp(payload) {
   };
 }
 
+export function unselectEmp() {
+  return {
+    type: 'UNSELECT_EMP'
+  };
+}
+
 export function updateCurrentEmp(payload) {
   return {
     type: 'UPDATE_CURRENT_EMP',
     payload
   }
-}
-
-export function unselectEmp() {
-  return {
-    type: 'UNSELECT_EMP'
-  };
 }
