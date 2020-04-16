@@ -25,6 +25,26 @@ export function deleteEmp(payload) {
   };
 }
 
+export function clickSaveBtn() {
+  return {
+    type: 'CLICK_SAVE_BTN'
+  }
+}
+
+export function clickDeleteBtn(payload) {
+  return {
+    type: 'CLICK_DELETE_BTN',
+    payload
+  };
+}
+
+export function selectCheckbox(payload) {
+  return {
+    type: 'SELECT_CHECKBOX',
+    payload
+  };
+}
+
 export function selectEmp(payload) {
   return {
     type: 'SELECT_EMP',

@@ -19,62 +19,64 @@ const ActionForm = (props) => {
     form.setFieldsValue(props.currentEmp);
   });
 
-  // const onInputChange = (event, col) => {
-  //   // CAN PHAI VALIDATE TRC KHI UPDATE HAY ADD
-  // }
   const onFinish = (value) => {
-    if (value.id === "") {
+    console.log("value" ,value)
+    if (!props.currentEmp.id) { // if is adding
       props.clickAddBtn(value);
     } else {
-      console.log("du di me")
+      console.log("bug: add when select")
     }
   }
 
   const onValuesChange = (value) => {
-    let validateType = null;
-    console.log(value, Object.keys(value)[0], Object.values(value))
-    switch (Object.keys(value)[0]) {
-      case "employee_name":
-        validateType = isName;
-        break;
-      case "employee_age":
-        validateType = isAge;
-        break;
-      case "employee_salary":
-        validateType = isMoney;
-        break;
-      default:
-        break;
-    }
-    if (validateType) {
-      validateType(null, Object.values(value)[0])
-        .then(function() {
-          switch (Object.keys(value)[0]) {
-            case "employee_name":
-              props.updateCurrentEmp({
-                ...props.currentEmp,
-                employee_name: Object.values(value)[0]
-              });
-              break;
-            case "employee_age":
-              props.updateCurrentEmp({
-                ...props.currentEmp,
-                employee_age: Object.values(value)[0]
-              });
-              break;
-            case "employee_salary":
-              props.updateCurrentEmp({
-                ...props.currentEmp,
-                employee_salary: Object.values(value)[0]
-              });
-              break;
-            default:
-              break;
-          }
-        })
-        .catch(function() {
-          return;
-        });
+    if (props.currentEmp.id) { // if is editing
+      let validateType = null;
+      console.log(value.id, Object.keys(value)[0], Object.values(value))
+      switch (Object.keys(value)[0]) {
+        case "employee_name":
+          validateType = isName;
+          break;
+        case "employee_age":
+          validateType = isAge;
+          break;
+        case "employee_salary":
+          validateType = isMoney;
+          break;
+        default:
+          break;
+      }
+      if (validateType) {
+        validateType(null, Object.values(value)[0])
+          .then(function() {
+            switch (Object.keys(value)[0]) {
+              case "employee_name":
+                props.updateCurrentEmp({
+                  ...props.currentEmp,
+                  employee_name: Object.values(value)[0]
+                });
+                break;
+              case "employee_age":
+                props.updateCurrentEmp({
+                  ...props.currentEmp,
+                  employee_age: Object.values(value)[0]
+                });
+                break;
+              case "employee_salary":
+                props.updateCurrentEmp({
+                  ...props.currentEmp,
+                  employee_salary: Object.values(value)[0]
+                });
+                break;
+              default:
+                break;
+            }
+          })
+          .catch(function() {
+            return;
+          });
+      }
+    } else {
+      return;
     }
   }
 

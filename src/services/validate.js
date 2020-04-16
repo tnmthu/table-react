@@ -19,6 +19,5 @@ export const removeAscent = (str) => {
 }
 export const isName = (rule, s) => {
   let regex = /^[a-zA-Z ]+$/;
-  console.log("valid name",s)
   return regex.test(removeAscent(s)) ? Promise.resolve() : Promise.reject("Wrong name format.")
 }

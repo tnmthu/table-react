@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Table } from 'antd';
 import { connect } from 'react-redux';
-import { getEmps, selectEmp, unselectEmp } from '../../redux/actions';
+import { getEmps, selectEmp, unselectEmp, selectCheckbox } from '../../redux/actions';
 import './style.scss';
 
 const TableTemplate = (props) => {
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [ selectedRowKeys, setSelectedRowKeys ] =  props.rowState;
 
   const columns = [
     {
@@ -38,6 +39,7 @@ const TableTemplate = (props) => {
   const onSelectChange = (selectedRowKeys) => {
     console.log("selected rows: ", selectedRowKeys);
     setSelectedRowKeys(selectedRowKeys);
+    props.selectCheckbox(selectedRowKeys);
   };
 
   const rowSelection = {
@@ -73,7 +75,8 @@ const TableTemplate = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    emps: state.emps
+    emps: state.emps,
+    selectedRows: state.selectedRows
   };
 }
 
@@ -81,7 +84,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getEmps: () => dispatch(getEmps()),
     selectEmp: (payload) => dispatch(selectEmp(payload)),
-    unselectEmp: () => dispatch(unselectEmp())
+    unselectEmp: () => dispatch(unselectEmp()),
+    selectCheckbox: (payload) => dispatch(selectCheckbox(payload)) 
   };
 }
 
