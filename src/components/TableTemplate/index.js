@@ -55,7 +55,7 @@ const TableTemplate = (props) => {
   };
 
   return (
-    <Table rowSelection={rowSelection} className="my_table" dataSource={data} columns={columns} rowKey={record => record.key} 
+    <Table rowSelection={rowSelection} dataSource={data} columns={columns} rowKey={record => record.key} 
     onRow={(record) => {
       return {
         onClick: () => {
