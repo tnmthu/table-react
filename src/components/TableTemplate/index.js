@@ -6,8 +6,9 @@ import './style.scss';
 
 const TableTemplate = (props) => {
 
-  // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [ selectedRowKeys, setSelectedRowKeys ] =  props.rowState;
+  const [deletedRows, setDeletedRows] = props.deletedState;
+  let data = props.emps;
 
   const columns = [
     {
@@ -37,38 +38,41 @@ const TableTemplate = (props) => {
   ];
 
   const onSelectChange = (selectedRowKeys) => {
-    console.log("selected rows: ", selectedRowKeys);
-    setSelectedRowKeys(selectedRowKeys);
+    setSelectedRowKeys();
+    for (let item of selectedRowKeys) {
+      setDeletedRows([...deletedRows, data.find((emp) => emp.key === item)])
+    }
     props.selectCheckbox(selectedRowKeys);
   };
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: onSelectChange
+    onChange: onSelectChange,
+    getCheckboxProps: record => ({
+      disabled: record.classes.includes("deleted"), // Column configuration not to be checked
+    }),
   };
 
   return (
-    <Table rowSelection={rowSelection} className="table" dataSource={props.emps}  columns={columns} rowKey={record => record.id} 
-    onRow={(record, rowIndex) => {
+    <Table rowSelection={rowSelection} className="my_table" dataSource={data} columns={columns} rowKey={record => record.key} 
+    onRow={(record) => {
       return {
         onClick: () => {
-          const trs = document.getElementsByTagName('tr')
-          for (let tr of trs) {
-            if (record.id === tr.dataset.rowKey) {
-              if (tr.classList.contains('selected')) {
-                tr.classList.remove('selected');
-                props.unselectEmp();
-              } else {
-                tr.classList.add("selected");
-                props.selectEmp(record); // pass record to redux state
-              }
+          if (record.classes.includes("deleted")) {
+            return;
+          } else {
+            if (record.classes.includes("selected")) {
+              props.unselectEmp({...record, classes: record.classes.replace("selected", "")});
             } else {
-              tr.classList.remove("selected")
+              props.selectEmp({...record, classes: record.classes + " selected"});
             }
           }
         }
       }
     }} 
+    rowClassName={(record) => {
+      return record.classes;
+    }}
     ></Table>  
   );
 }
@@ -84,7 +88,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getEmps: () => dispatch(getEmps()),
     selectEmp: (payload) => dispatch(selectEmp(payload)),
-    unselectEmp: () => dispatch(unselectEmp()),
+    unselectEmp: (payload) => dispatch(unselectEmp(payload)),
     selectCheckbox: (payload) => dispatch(selectCheckbox(payload)) 
   };
 }

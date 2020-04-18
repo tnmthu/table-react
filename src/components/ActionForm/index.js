@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Form, Input, InputNumber } from 'antd';
 import { connect } from 'react-redux';
-import { addEmp, clickAddBtn, updateCurrentEmp } from '../../redux/actions';
+import { clickAddBtn, updateCurrentEmp } from '../../redux/actions';
 import { isName, isAge, isMoney } from '../../services/validate';
-import './style.css';
+import './style.scss';
+
+let tmpKey = 1;
 
 const ActionForm = (props) => {
   const form = props.form;
@@ -20,18 +22,18 @@ const ActionForm = (props) => {
   });
 
   const onFinish = (value) => {
-    console.log("value" ,value)
+    console.log("add btn", value)
     if (!props.currentEmp.id) { // if is adding
-      props.clickAddBtn(value);
+      props.clickAddBtn({...value, key: `add_${tmpKey}`, classes: "added"});
+      tmpKey += 1;
     } else {
       console.log("bug: add when select")
     }
   }
 
   const onValuesChange = (value) => {
-    if (props.currentEmp.id) { // if is editing
+    if (props.currentEmp.key) { // if is editing
       let validateType = null;
-      console.log(value.id, Object.keys(value)[0], Object.values(value))
       switch (Object.keys(value)[0]) {
         case "employee_name":
           validateType = isName;
@@ -52,19 +54,22 @@ const ActionForm = (props) => {
               case "employee_name":
                 props.updateCurrentEmp({
                   ...props.currentEmp,
-                  employee_name: Object.values(value)[0]
+                  employee_name: Object.values(value)[0],
+                  classes: props.currentEmp.classes + " edited"
                 });
                 break;
               case "employee_age":
                 props.updateCurrentEmp({
                   ...props.currentEmp,
-                  employee_age: Object.values(value)[0]
+                  employee_age: Object.values(value)[0],
+                  classes: props.currentEmp.classes + " edited"
                 });
                 break;
               case "employee_salary":
                 props.updateCurrentEmp({
                   ...props.currentEmp,
-                  employee_salary: Object.values(value)[0]
+                  employee_salary: Object.values(value)[0],
+                  classes: props.currentEmp.classes + " edited"
                 });
                 break;
               default:
@@ -106,8 +111,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addEmp: (payload) => dispatch(addEmp(payload)),
-    clickAddBtn: (payload) => dispatch(clickAddBtn({type: 'ADD_EMP', newEmp: payload})),
+    clickAddBtn: (payload) => dispatch(clickAddBtn({type: 'ADD_EMP', emp: payload})),
     updateCurrentEmp: (payload) => dispatch(updateCurrentEmp({type: 'EDIT_EMP', edited: payload}))
   }
 }

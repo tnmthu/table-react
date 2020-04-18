@@ -1,75 +1,16 @@
 const initialState = {
   emps: [], 
   currentEmp: {
+    "key": "",
     "id": "",
     "employee_name": "",
     "employee_age": "",
-    "employee_salary": ""
+    "employee_salary": "",
+    "classes": ""
   },
   selectedRows: [],
   requests: [] // todo: clean request after the hullabaloo
 };
-
-let test = [
-  {
-    type: 'EDIT_EMP',
-    edited: {
-      id: "218",
-      employee_name: "G Dragon",
-      employee_salary: "1",
-      employee_age: "30",
-      profile_image: "profile_image 218"
-    }
-  },
-  {
-    type: 'EDIT_EMP',
-    edited: {
-      id: "218",
-      employee_name: "G Dragon",
-      employee_salary: "2",
-      employee_age: "30",
-      profile_image: "profile_image 218"
-    }
-  },
-  {
-    type: 'EDIT_EMP',
-    edited: {
-      id: "218",
-      employee_name: "G Dragon",
-      employee_salary: "3",
-      employee_age: "30",
-      profile_image: "profile_image 218"
-    }
-  },
-  {
-    type: 'EDIT_EMP',
-    edited: {
-      id: "222",
-      employee_name: "G Dragon",
-      employee_salary: "4",
-      employee_age: "30",
-      profile_image: "profile_image 218"
-    }
-  },
-  {
-    type: 'EDIT_EMP',
-    edited: {
-      id: "222",
-      employee_name: "G Dragon",
-      employee_salary: "5",
-      employee_age: "30",
-      profile_image: "profile_image 218"
-    }
-  },
-]
-
-function uniqueRequestByKeepLast(requests, key) {
-  return [
-    ...new Map(
-      requests.map(x => [key(x), x])
-    ).values()
-  ]
-}
 
 function reducer(state = initialState, action) {
 
@@ -82,13 +23,10 @@ function reducer(state = initialState, action) {
     case 'EMPS_RECEIVED':
       return {
         ...state,
-        emps: action.json
-      };
-
-    case 'ADD_EMP':
-      return {
-        ...state,
-        currentEmp: action.payload
+        // emps: action.json,
+        emps: action.json.map(function({profile_image, classes, ...others}) {
+          return others.key === "" ? {key: others.key, classes: "", ...others} : {key: others.id, classes: "", ...others};
+        })
       };
 
     case 'CLICK_ADD_BTN':
@@ -99,38 +37,33 @@ function reducer(state = initialState, action) {
           action.payload // payload { type: ADD_EMP, newEmp }
         ],
         emps: [
-          action.payload.newEmp,
+          action.payload.emp,
           ...state.emps,
         ],
         currentEmp: initialState.currentEmp
       }
     
-    case 'DELETE_EMP':
-      return {
-        // ...state,
-
-      };
-    
     case 'CLICK_DELETE_BTN':
+      console.log("clcik del btn", state.emps, action.payload)
       return {
         ...state,
         requests: [
           ...state.requests,
           action.payload // { type: DELETE_EMP, payload }
         ],
-        emps: state.emps.filter(function(emp) {
-          return emp.id !== action.payload.empId;
+        emps: state.emps.map(function(emp) {
+          return emp.key === action.payload.emp.key ? action.payload.emp : emp;
         }),
         selectedRows: initialState.selectedRows
       };
 
     case 'CLICK_SAVE_BTN':
-      let editRequests = state.requests.filter(function(item) {
-        return item.type === 'EDIT_EMP';
-      });
-      let cleanEditReqs = uniqueRequestByKeepLast(editRequests, item => item.edited.id);
-      console.log("clean edit requests", cleanEditReqs);
-      return ;// initialstate
+      return {
+        ...state,
+        requests: [
+          ...action.payload
+        ]
+      };// initialstate
 
     case 'SELECT_CHECKBOX':
       return {
@@ -143,7 +76,25 @@ function reducer(state = initialState, action) {
     case 'SELECT_EMP':
       return {
         ...state,
-        currentEmp: action.payload
+        currentEmp: action.payload,
+        emps: state.emps.map(function(emp) {
+          return emp.key === action.payload.key ? action.payload : emp;
+        })
+      };
+
+    case 'UNSELECT_EMP':
+      return {
+        ...state,
+        currentEmp: {
+          id: "",
+          employee_name: "",
+          employee_age: "",
+          employee_salary: "",
+          classes: ""
+        },
+        emps: state.emps.map(function(emp) {
+          return emp.key === action.payload.key ? action.payload : emp;
+        })
       };
 
     case 'UPDATE_CURRENT_EMP':
@@ -157,19 +108,14 @@ function reducer(state = initialState, action) {
           ...action.payload.edited
         },
         emps: state.emps.map(function(emp) {
-          return emp.id === action.payload.edited.id ? action.payload.edited : emp;
+          return emp.key == action.payload.edited.key ? action.payload.edited : emp;
         })
       };
 
-    case 'UNSELECT_EMP':
+    case 'SAVE_SUCCESSFUL':
+      console.log("inital state", initialState)
       return {
-        ...state,
-        currentEmp: {
-          id: "",
-          employee_name: "",
-          employee_age: "",
-          employee_salary: ""
-        }
+        ...initialState
       };
 
     default:

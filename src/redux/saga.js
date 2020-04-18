@@ -1,5 +1,6 @@
 import { put, takeLatest, all, call } from 'redux-saga/effects';
-import {create, retrieve, update, del } from '../services/crud';
+import { create, retrieve, update, del } from '../services/crud';
+import { saveSuccessful, getEmps } from '../redux/actions';
 
 function* fetchEmps() {
   try {
@@ -10,28 +11,51 @@ function* fetchEmps() {
   }
 }
 
-function* createNewEmp(payload) {
-  try {
-    yield call(create, payload);
-    // yield call(fetchEmps);
-  } catch(err) {
-    console.log(err);
-  }
-}
+// function* createNewEmp(payload) {
+//   try {
+//     yield call(create, payload);
+//     // yield call(fetchEmps);
+//   } catch(err) {
+//     console.log(err);
+//   }
+// }
 
-function* updateEmp(payload) {
-  try {
-    yield call(update, payload);
-  } catch(err) {
-    console.log(err);
-  }
-}
+// function* updateEmp(payload) {
+//   try {
+//     yield call(update, payload);
+//   } catch(err) {
+//     console.log(err);
+//   }
+// }
 
-function* deleteEmp(payload) {
+// function* deleteEmp(payload) {
+//   try {
+//     yield call(del, payload);
+//   } catch(err) {
+//     console.log(err);
+//   }
+// }
+
+function* handleSave(action) {
   try {
-    yield call(del, payload);
+    console.log("saga save", action);
+    let adds = action.payload.filter(item => item.type === "ADD_EMP");
+    let edits = action.payload.filter(item => item.type === "EDIT_EMP");
+    let deletes = action.payload.filter(item => item.type === "DELETE_EMP");
+    console.log("add edit del", adds, edits, deletes)
+    yield all([
+      ...adds.map(item => call(create, item.emp)),
+      ...edits.map(item => call(update, item.emp)),
+      ...deletes.map(item => call(del, item.emp.id))
+    ]);
+
+    // todo: save successful
+    alert("save sucessful");
+    yield put(saveSuccessful());
+    yield put(getEmps());
+    // reset everything
   } catch(err) {
-    console.log(err);
+    // todo: save failed
   }
 }
 
@@ -42,9 +66,10 @@ function* deleteEmp(payload) {
 export default function* saga() {
   yield all([
     // actionWatcher(),
-    yield takeLatest('ADD_EMP', createNewEmp),
+    yield takeLatest('CLICK_SAVE_BTN', handleSave),
+    // yield takeLatest('ADD_EMP', createNewEmp),
     yield takeLatest('GET_EMPS', fetchEmps),
-    yield takeLatest('EDIT_EMP', updateEmp),
-    yield takeLatest('DELETE_EMP', deleteEmp),
+    // yield takeLatest('EDIT_EMP', updateEmp),
+    // yield takeLatest('DELETE_EMP', deleteEmp),
   ]);
 }

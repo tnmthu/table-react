@@ -5,13 +5,27 @@
   width: 100%;
 }
 
-.table {
+.my_table {
   width: 50vw;
 }
 .selected {
   /* background-color: rgba(141,154,187, 0.68); */
   background-color: rgb(227,228,231);
+  z-index: 999;
 }
-// .ant-table-row:hover .ant-table-row-level-0:hover .selected:hover {
-//   background-color: red !important;
-// } 
+.edited {
+  background-color: #d2ffbd;
+}
+.deleted {
+  background-color: #cf999c !important;
+  cursor: not-allowed;
+}
+.added {
+  background-color: #dce3fb;
+}
+.ant-table-thead>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td, 
+.ant-table-tbody>tr.ant-table-row-hover:not(.ant-table-expanded-row)>td, 
+.ant-table-thead>tr:hover:not(.ant-table-expanded-row)>td, 
+.ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+    background: rgb(240, 239, 239); //Change the existing color to `unset`
+}
