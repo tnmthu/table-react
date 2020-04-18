@@ -4,26 +4,12 @@ export function getEmps() {
   };
 }
 
-// export function addEmp(payload) {
-//   return {
-//     type: 'ADD_EMP',
-//     payload
-//   };
-// }
-
 export function clickAddBtn(payload) {
   return {
     type: 'CLICK_ADD_BTN',
     payload
   };
 }
-
-// export function deleteEmp(payload) {
-//   return {
-//     type: 'DELETE_EMP',
-//     payload
-//   };
-// }
 
 export function clickSaveBtn(payload) {
   return {

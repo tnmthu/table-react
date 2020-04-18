@@ -5,36 +5,30 @@ import ActionForm from './components/ActionForm';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { clickDeleteBtn, clickSaveBtn } from './redux/actions';
-import { uniqueRequestByKeepLast } from './services/utilities';
 import { Form } from 'antd';
 
 const App = (props) => {
-  const [form] = Form.useForm();
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [deletedRows, setDeletedRows] = useState([]);
+
+  const [form] = Form.useForm(); //andt form
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]); // for table
+  const [deletedRows, setDeletedRows] = useState([]); // for table
 
   const onAddBtnClick = () => {
     form.submit();
   }
 
   const onDeleteBtnClick = () => {
-    deletedRows.map(item => props.clickDeleteBtn({...item, classes: item.classes + " deleted"}));
+    deletedRows.map(item => props.clickDeleteBtn({...item, classes: item.classes + " deleted"})); // add deleted UI
+    // reset checkbox
     setSelectedRowKeys([]);
     setDeletedRows([]);
   }
 
   const onSaveBtnClick = () => {
-    // let editRequests = props.requests.filter(function(item) {
-    //   return item.type === 'EDIT_EMP';
-    // });
-    // let cleanEditReqs = uniqueRequestByKeepLast(editRequests, item => item.edited.id);
-    // let prevReqs = [...cleanEditReqs, ...props.requests.filter(function(item) {
-    //   return item.type !== 'EDIT_EMP';
-    // })];
     let reqs = [];
     for (let emp of props.emps) {
       if (emp.classes.includes("deleted")) {
-        if (!emp.classes.includes("added")) { // deleted but not just added
+        if (!emp.classes.includes("added")) { // deleted but not added (ignore added then deleted)
           reqs.push({ type: 'DELETE_EMP', emp: emp});
         }
       } else if (emp.classes.includes("added")) {
@@ -43,33 +37,7 @@ const App = (props) => {
         reqs.push({ type: 'EDIT_EMP', emp: emp });
       }
     }
-    console.log("reqs", reqs)
     props.clickSaveBtn(reqs);
-
-    // let editRequests = props.requests.filter(function(item) {
-    //   return item.type === 'EDIT_EMP';
-    // });
-    // let cleanEditReqs = uniqueRequestByKeepLast(editRequests, item => item.edited.id);
-    // let prevReqs = [...cleanEditReqs, ...props.requests.filter(function(item) {
-    //   return item.type !== 'EDIT_EMP';
-    // })];
-    // let reqs = [];
-    // for (let req of prevReqs) {
-    //   if (req.emp.class.includes("deleted")) {
-    //     if (!req.emp.class.includes("added")) { // deleted but not just added
-    //       reqs.push(req);
-    //     }
-    //   } else if (req.emp.class.includes("added")) {
-    //     reqs.push(req);
-    //   } else if (req.emp.class.includes("edited")) {
-    //     reqs.push(req);
-    //   }
-    // }
-    // console.log("reqs", reqs)
-    // props.clickSaveBtn(reqs);
-    // props.clickSaveBtn([...cleanEditReqs, ...props.requests.filter(function(item) {
-    //   return item.type !== 'EDIT_EMP';
-    // })]);
   }
 
   return (

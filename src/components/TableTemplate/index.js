@@ -6,8 +6,8 @@ import './style.scss';
 
 const TableTemplate = (props) => {
 
-  const [ selectedRowKeys, setSelectedRowKeys ] =  props.rowState;
-  const [deletedRows, setDeletedRows] = props.deletedState;
+  const [ selectedRowKeys, setSelectedRowKeys ] =  props.rowState; // for rowSelection in antd
+  const [deletedRows, setDeletedRows] = props.deletedState; // to get deleted records
   let data = props.emps;
 
   const columns = [
@@ -39,6 +39,7 @@ const TableTemplate = (props) => {
 
   const onSelectChange = (selectedRowKeys) => {
     setSelectedRowKeys();
+    // get deleted rows from selected checkboxes
     for (let item of selectedRowKeys) {
       setDeletedRows([...deletedRows, data.find((emp) => emp.key === item)])
     }
@@ -49,7 +50,7 @@ const TableTemplate = (props) => {
     selectedRowKeys,
     onChange: onSelectChange,
     getCheckboxProps: record => ({
-      disabled: record.classes.includes("deleted"), // Column configuration not to be checked
+      disabled: record.classes.includes("deleted"), // cannot check when is deleted
     }),
   };
 

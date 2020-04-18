@@ -9,7 +9,6 @@ const initialState = {
     "classes": ""
   },
   selectedRows: [],
-  requests: [] // todo: clean request after the hullabaloo
 };
 
 function reducer(state = initialState, action) {
@@ -23,7 +22,8 @@ function reducer(state = initialState, action) {
     case 'EMPS_RECEIVED':
       return {
         ...state,
-        // emps: action.json,
+        // each emp have 'classes' property
+        // if emp is newly added => rowKey = key; else rowKey = id  
         emps: action.json.map(function({profile_image, classes, ...others}) {
           return others.key === "" ? {key: others.key, classes: "", ...others} : {key: others.id, classes: "", ...others};
         })
@@ -32,26 +32,17 @@ function reducer(state = initialState, action) {
     case 'CLICK_ADD_BTN':
       return {
         ...state,
-        requests: [
-          ...state.requests,
-          action.payload // payload { type: ADD_EMP, newEmp }
-        ],
         emps: [
-          action.payload.emp,
+          action.payload.emp, // add new emp to table top
           ...state.emps,
         ],
         currentEmp: initialState.currentEmp
       }
     
     case 'CLICK_DELETE_BTN':
-      console.log("clcik del btn", state.emps, action.payload)
       return {
         ...state,
-        requests: [
-          ...state.requests,
-          action.payload // { type: DELETE_EMP, payload }
-        ],
-        emps: state.emps.map(function(emp) {
+        emps: state.emps.map(function(emp) { // deleted row UI
           return emp.key === action.payload.emp.key ? action.payload.emp : emp;
         }),
         selectedRows: initialState.selectedRows
@@ -60,10 +51,7 @@ function reducer(state = initialState, action) {
     case 'CLICK_SAVE_BTN':
       return {
         ...state,
-        requests: [
-          ...action.payload
-        ]
-      };// initialstate
+      };
 
     case 'SELECT_CHECKBOX':
       return {
@@ -77,7 +65,7 @@ function reducer(state = initialState, action) {
       return {
         ...state,
         currentEmp: action.payload,
-        emps: state.emps.map(function(emp) {
+        emps: state.emps.map(function(emp) { // select row UI
           return emp.key === action.payload.key ? action.payload : emp;
         })
       };
@@ -92,7 +80,7 @@ function reducer(state = initialState, action) {
           employee_salary: "",
           classes: ""
         },
-        emps: state.emps.map(function(emp) {
+        emps: state.emps.map(function(emp) { // unselect row UI
           return emp.key === action.payload.key ? action.payload : emp;
         })
       };
@@ -100,20 +88,15 @@ function reducer(state = initialState, action) {
     case 'UPDATE_CURRENT_EMP':
       return {
         ...state,
-        requests: [
-          ...state.requests,
-          action.payload // { type: EDIT_EMP, edited }
-        ],
         currentEmp: {
           ...action.payload.edited
         },
-        emps: state.emps.map(function(emp) {
+        emps: state.emps.map(function(emp) { // change edited emp UI 
           return emp.key == action.payload.edited.key ? action.payload.edited : emp;
         })
       };
 
     case 'SAVE_SUCCESSFUL':
-      console.log("inital state", initialState)
       return {
         ...initialState
       };

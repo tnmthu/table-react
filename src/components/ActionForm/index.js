@@ -5,7 +5,7 @@ import { clickAddBtn, updateCurrentEmp } from '../../redux/actions';
 import { isName, isAge, isMoney } from '../../services/validate';
 import './style.scss';
 
-let tmpKey = 1;
+let tmpKey = 1; // temporary rowKey for newly added
 
 const ActionForm = (props) => {
   const form = props.form;
@@ -17,17 +17,18 @@ const ActionForm = (props) => {
     employee_salary: '',
   }
 
+  // update form according to currentEmp redux state
   useEffect(() => {
     form.setFieldsValue(props.currentEmp);
   });
 
   const onFinish = (value) => {
-    console.log("add btn", value)
     if (!props.currentEmp.id) { // if is adding
       props.clickAddBtn({...value, key: `add_${tmpKey}`, classes: "added"});
       tmpKey += 1;
+      form.resetFields();
     } else {
-      console.log("bug: add when select")
+      alert("Cannot add when already existed.");
     }
   }
 
@@ -47,7 +48,7 @@ const ActionForm = (props) => {
         default:
           break;
       }
-      if (validateType) {
+      if (validateType) { // validate inputs + add class edited
         validateType(null, Object.values(value)[0])
           .then(function() {
             switch (Object.keys(value)[0]) {

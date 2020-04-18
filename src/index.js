@@ -13,13 +13,10 @@ import App from './App';
 import store from './redux/store';
 
 ReactDOM.render(
-  // <React.StrictMode>
     <Provider store={store}>
       <App />
-    </Provider>
-  // </React.StrictMode>,
-  ,
+    </Provider>,
   document.getElementById('root')
 );
-store.dispatch({ type: "GET_EMPS" });
+store.dispatch({ type: "GET_EMPS" }); // initial get emps
 if (module.hot) { module.hot.accept(App);}
