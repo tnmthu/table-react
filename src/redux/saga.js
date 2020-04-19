@@ -1,6 +1,7 @@
 import { put, takeLatest, all, call } from 'redux-saga/effects';
 import { create, retrieve, update, del } from '../services/crud';
 import { saveSuccessful, getEmps } from '../redux/actions';
+import { message } from 'antd';
 
 function* fetchEmps() {
   try {
@@ -22,13 +23,14 @@ function* handleSave(action) {
       ...deletes.map(item => call(del, item.emp.id))
     ]);
 
-    alert("Saved successfully.");
-    yield put(saveSuccessful());
+    // alert("Saved successfully.");
+    yield put(saveSuccessful({saved: true, msg: "Saved successfully!"}));
     yield put(getEmps());
 
   } catch(err) {
     console.error(err);
-    alert("Save failed.");
+    // alert("Save failed.");
+    yield put(saveSuccessful({saved: false, msg: "Save failed!"}));
   }
 }
 

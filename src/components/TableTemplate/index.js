@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getEmps, selectEmp, unselectEmp, selectCheckbox } from '../../redux/actions';
 import './style.scss';
 
+
 const TableTemplate = (props) => {
 
   const [ selectedRowKeys, setSelectedRowKeys ] =  props.rowState; // for rowSelection in antd
@@ -58,8 +59,9 @@ const TableTemplate = (props) => {
     }),
   };
 
+
   return (
-    <Table rowSelection={rowSelection} className="my_table" dataSource={data} columns={columns} rowKey={record => record.key} 
+    <Table bordered rowSelection={rowSelection} className="my_table" dataSource={data} columns={columns} rowKey={record => record.key} 
     onRow={(record) => {
       return {
         onClick: () => {

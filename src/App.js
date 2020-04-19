@@ -5,9 +5,23 @@ import ActionForm from './components/ActionForm';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { clickDeleteBtn, clickSaveBtn } from './redux/actions';
-import { Form } from 'antd';
+import { Form, Spin, message } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
+
+
 
 const App = (props) => {
+
+  // check if not render for the first time 
+  if (Object.keys(props.isSaved).length !== 0) {
+    if (props.isSaved.saved === true) {
+      message.success(props.isSaved.msg);
+    } else {
+      message.error(props.isSaved.msg);
+    }
+  }
 
   const [form] = Form.useForm(); //andt form
   const [selectedRowKeys, setSelectedRowKeys] = useState([]); // for table
@@ -41,22 +55,26 @@ const App = (props) => {
   }
 
   return (
-    <div className="container">
-      <TableTemplate rowState={[selectedRowKeys, setSelectedRowKeys]} deletedState={[deletedRows, setDeletedRows]} />
-      <div className="right">
-        <div className="buttons">
-          <Button onClick={onAddBtnClick} className="btn btn__add">Add</Button>
-          <Button onClick={onDeleteBtnClick} className="btn btn__delete">Delete</Button>
-          <Button onClick={onSaveBtnClick} className="btn btn__save">Save</Button>
+    <Spin spinning={props.isLoading} indicator={antIcon}>
+      <div className="container">  
+        <TableTemplate rowState={[selectedRowKeys, setSelectedRowKeys]} deletedState={[deletedRows, setDeletedRows]} />
+        <div className="right">
+          <div className="buttons">
+            <Button onClick={onAddBtnClick} className="btn btn__add">Add</Button>
+            <Button onClick={onDeleteBtnClick} className="btn btn__delete">Delete</Button>
+            <Button onClick={onSaveBtnClick} className="btn btn__save">Save</Button>
+          </div>
+          <ActionForm form={form} />
         </div>
-        <ActionForm form={form} />
       </div>
-    </div>
+    </Spin>
   );
 }
 
 const mapStateToProps = (state) => {
   return {
+    isLoading: state.isLoading,
+    isSaved: state.isSaved,
     currentEmp: state.currentEmp,
     selectedRows: state.selectedRows,
     emps: state.emps,

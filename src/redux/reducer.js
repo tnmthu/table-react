@@ -1,4 +1,6 @@
 const initialState = {
+  isLoading: true,
+  isSaved: {},
   emps: [], 
   currentEmp: {
     "key": "",
@@ -22,6 +24,8 @@ function reducer(state = initialState, action) {
     case 'EMPS_RECEIVED':
       return {
         ...state,
+        isSaved: {},
+        isLoading: false,
         // each emp have 'classes' property
         // if emp is newly added => rowKey = key; else rowKey = id  
         emps: action.json.map(function({profile_image, classes, ...others}) {
@@ -98,7 +102,8 @@ function reducer(state = initialState, action) {
 
     case 'SAVE_SUCCESSFUL':
       return {
-        ...initialState
+        ...initialState,
+        isSaved: action.payload,
       };
 
     default:

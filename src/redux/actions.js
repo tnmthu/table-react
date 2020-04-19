@@ -53,8 +53,9 @@ export function updateCurrentEmp(payload) {
   };
 }
 
-export function saveSuccessful() {
+export function saveSuccessful(payload) {
   return {
-    type: 'SAVE_SUCCESSFUL'
+    type: 'SAVE_SUCCESSFUL',
+    payload
   };
 }
