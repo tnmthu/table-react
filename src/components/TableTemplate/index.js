@@ -34,6 +34,10 @@ const TableTemplate = (props) => {
       dataIndex: 'employee_salary',
       sorter: (a, b) => a.employee_salary - b.employee_salary,
       sortDirections: ['descend', 'ascend'],
+      // salary formatter
+      render: function(value) {
+        return value.toLocaleString("en");
+      }
     },
   ];
 

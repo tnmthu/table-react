@@ -98,7 +98,11 @@ const ActionForm = (props) => {
         <InputNumber></InputNumber>
       </Form.Item>
       <Form.Item label="Salary:" name="employee_salary" rules={[{required: true,}, {validator: isMoney}]}>
-        <InputNumber></InputNumber>
+        <InputNumber
+        // money formatter
+        formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        parser={value => value.replace(/\$\s?|(,*)/g, '')}
+        ></InputNumber>
       </Form.Item>
     </Form>
   );

@@ -66,7 +66,7 @@ function reducer(state = initialState, action) {
         ...state,
         currentEmp: action.payload,
         emps: state.emps.map(function(emp) { // select row UI
-          return emp.key === action.payload.key ? action.payload : emp;
+          return emp.key === action.payload.key ? action.payload : {...emp, classes: emp.classes.replace(/selected/g, '')};
         })
       };
 
