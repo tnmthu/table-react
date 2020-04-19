@@ -10,8 +10,6 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50 }} spin />;
 
-
-
 const App = (props) => {
 
   // check if not render for the first time 
@@ -51,7 +49,11 @@ const App = (props) => {
         reqs.push({ type: 'EDIT_EMP', emp: emp });
       }
     }
-    props.clickSaveBtn(reqs);
+    if (reqs.length !== 0) {
+      props.clickSaveBtn(reqs);
+    } else {
+      return;
+    }
   }
 
   return (
