@@ -42,7 +42,7 @@ const App = (props) => {
 
   return (
     <div className="container">
-      <TableTemplate className="my_table" rowState={[selectedRowKeys, setSelectedRowKeys]} deletedState={[deletedRows, setDeletedRows]} />
+      <TableTemplate rowState={[selectedRowKeys, setSelectedRowKeys]} deletedState={[deletedRows, setDeletedRows]} />
       <div className="right">
         <div className="buttons">
           <Button onClick={onAddBtnClick} className="btn btn__add">Add</Button>

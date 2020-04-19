@@ -30,3 +30,8 @@
 .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
     background: rgb(240, 239, 239); //Change the existing color to `unset`
 }
+@media screen and (max-width: 820px) {
+  .my_table {
+    width: 80vw;
+  }
+}
