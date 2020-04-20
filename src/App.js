@@ -31,6 +31,7 @@ const App = (props) => {
 
   const onDeleteBtnClick = () => {
     deletedRows.map(item => props.clickDeleteBtn({...item, classes: item.classes + " deleted"})); // add deleted UI
+    form.resetFields();
     // reset checkbox
     setSelectedRowKeys([]);
     setDeletedRows([]);
@@ -52,6 +53,7 @@ const App = (props) => {
     if (reqs.length !== 0) {
       props.clickSaveBtn(reqs);
     } else {
+      message.info("Please do something before saving.");
       return;
     }
   }
