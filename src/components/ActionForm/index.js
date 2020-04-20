@@ -91,13 +91,13 @@ const ActionForm = (props) => {
       <Form.Item label="Id:" name="id">
         <Input disabled></Input>
       </Form.Item>
-      <Form.Item label="Name:" name="employee_name" rules={[{required: true,}, {validator: isName}]}>
+      <Form.Item label="Name:" name="employee_name" rules={[{validator: isName}]}>
         <Input></Input>
       </Form.Item>
-      <Form.Item label="Age:" name="employee_age" rules={[{required: true}, {validator: isAge}]}>
+      <Form.Item label="Age:" name="employee_age" rules={[{validator: isAge}]}>
         <InputNumber></InputNumber>
       </Form.Item>
-      <Form.Item label="Salary:" name="employee_salary" rules={[{required: true,}, {validator: isMoney}]}>
+      <Form.Item label="Salary:" name="employee_salary" rules={[{validator: isMoney}]}>
         <InputNumber
         // money formatter
         formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}

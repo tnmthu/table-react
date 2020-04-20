@@ -1,9 +1,9 @@
 export const isAge = (rule, n) => {
-  return n > 20 && n < 65 ? Promise.resolve() : Promise.reject('Age must be an integer, > 20, < 65.');
+  return n != null && n > 20 && n < 65 ? Promise.resolve() : Promise.reject('Age must be an integer, > 20, < 65.');
 }
 export const isMoney = (rule, n) => {
   let regex = /^[0-9]{1,3}([0-9]{3})*$/;
-  return regex.test(n) ? Promise.resolve() : Promise.reject('Salary must be in money type. Eg. 1000000');
+  return n != null && regex.test(n) ? Promise.resolve() : Promise.reject('Salary must be in money type. Eg. 1000000');
 }
 export const removeAscent = (str) => {
   if (str === null || str === undefined) return str;
@@ -19,5 +19,5 @@ export const removeAscent = (str) => {
 }
 export const isName = (rule, s) => {
   let regex = /^[a-zA-Z ]+$/;
-  return regex.test(removeAscent(s)) ? Promise.resolve() : Promise.reject("Wrong name format.")
+  return s !== "" && regex.test(removeAscent(s)) ? Promise.resolve() : Promise.reject("Wrong name format.")
 }
